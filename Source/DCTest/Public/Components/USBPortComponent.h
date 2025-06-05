@@ -13,7 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFlashDriveEvent, const AFlashDriv
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (BlueprintSpawnableComponent))
 class DCTEST_API UUSBPortComponent : public UPaperSpriteComponent
 {
 	GENERATED_BODY()

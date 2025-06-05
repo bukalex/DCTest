@@ -6,7 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "FlashDrive.generated.h"
 
+class UPaperSprite;
 class UDraggableSpriteComponent;
+class AFlashDriveUnlockGame;
 
 /**
  * 
@@ -22,4 +24,30 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UDraggableSpriteComponent> BodySprite;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AFlashDriveUnlockGame> UnlockGameClass;
+
+	UPROPERTY(EditAnywhere)
+	FVector UnlockGameLocation = FVector(0, 10, 0);
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UPaperSprite> LockedSprite;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UPaperSprite> UnlockedSprite;
+
+protected:
+	bool bIsLocked = true;
+	TObjectPtr<AFlashDriveUnlockGame> UnlockGame;
+
+protected:
+	virtual void BeginPlay() override;
+
+protected:
+	UFUNCTION(BlueprintCallable)
+	void StartUnlockGame();
+
+	UFUNCTION(BlueprintCallable)
+	void Unlock();
 };

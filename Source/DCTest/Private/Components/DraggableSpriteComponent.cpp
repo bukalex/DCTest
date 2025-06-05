@@ -5,7 +5,34 @@
 
 UDraggableSpriteComponent::UDraggableSpriteComponent()
 {
-	SetSimulatePhysics(false);
+	SetSimulatePhysics(true);
+	SetEnableGravity(false);
+
+	BodyInstance.bLockXRotation = true;
+	BodyInstance.bLockYRotation = false;
+	BodyInstance.bLockZRotation = true;
+
+	BodyInstance.bLockXTranslation = false;
+	BodyInstance.bLockYTranslation = true;
+	BodyInstance.bLockZTranslation = false;
+}
+
+void UDraggableSpriteComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (AffectedComponentReference.ComponentProperty.IsNone() || !AffectedComponentReference.GetComponent(GetOwner()))
+	{
+		AffectedComponent = this;
+	}
+	else if (USceneComponent* Component = Cast<USceneComponent>(AffectedComponentReference.GetComponent(GetOwner())))
+	{
+		AffectedComponent = Component;
+	}
+	else
+	{
+		AffectedComponent = this;
+	}
 }
 
 void UDraggableSpriteComponent::StartDragging(const FVector& MousePosition)
@@ -24,20 +51,27 @@ bool UDraggableSpriteComponent::DragTo(const FVector& NewMousePosition)
 
 	if ((MouseHitPosition - LastMouseHitPosition).IsNearlyZero()) return false;
 
+	if (!AffectedComponent) AffectedComponent = this;
 	int32 Itteration = 1;
+
 	while (Itteration <= Itterations)
 	{
 		FVector ItteratedHitPosition = FMath::Lerp(ZeroItterationPosition, MouseHitPosition, ((float)Itteration) / Itterations);
 
-		TObjectPtr<USceneComponent> AffectedComponent = bDragWithRoot ? GetOwner()->GetRootComponent() : this;
-
 		FVector Translation = ItteratedHitPosition - LastMouseHitPosition;
+		FVector NewPosition;
 		FVector OldPosition = AffectedComponent->GetComponentLocation();
 		ZeroDepth(OldPosition);
 
-		if (!bLockTranslation) AffectedComponent->AddWorldOffset(Translation, true);
-
-		FVector NewPosition = AffectedComponent->GetComponentLocation();
+		if (!bLockTranslation)
+		{
+			AffectedComponent->AddWorldOffset(Translation, true);
+			NewPosition = AffectedComponent->GetComponentLocation();
+		}
+		else
+		{
+			NewPosition = OldPosition + Translation;
+		}
 		ZeroDepth(NewPosition);
 
 		if (!bLockRotation)
@@ -58,6 +92,8 @@ bool UDraggableSpriteComponent::DragTo(const FVector& NewMousePosition)
 		LastMouseHitPosition = ItteratedHitPosition;
 		Itteration++;
 	}
+
+	OnSpriteMoved.Broadcast();
 
 	return true;
 }
