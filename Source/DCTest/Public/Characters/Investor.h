@@ -3,23 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "FlashDrive.generated.h"
+#include "PaperCharacter.h"
+#include "Investor.generated.h"
 
-class UDraggableSpriteComponent;
+class UCameraComponent;
 
 /**
  * 
  */
 UCLASS()
-class DCTEST_API AFlashDrive : public AActor
+class DCTEST_API AInvestor : public APaperCharacter
 {
 	GENERATED_BODY()
 	
 public:
-	AFlashDrive();
+	AInvestor();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UDraggableSpriteComponent> BodySprite;
+	TObjectPtr<UCameraComponent> Camera;
 };

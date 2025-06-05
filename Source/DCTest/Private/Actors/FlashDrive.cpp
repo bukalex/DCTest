@@ -3,3 +3,10 @@
 
 #include "Actors/FlashDrive.h"
 
+#include "Components/DraggableSpriteComponent.h"
+
+AFlashDrive::AFlashDrive()
+{
+	BodySprite = CreateDefaultSubobject<UDraggableSpriteComponent>("BodySprite");
+	SetRootComponent(BodySprite);
+}
