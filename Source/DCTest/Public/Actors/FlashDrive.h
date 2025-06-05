@@ -10,6 +10,8 @@ class UPaperSprite;
 class UDraggableSpriteComponent;
 class AFlashDriveUnlockGame;
 
+#define ECC_Ground ECC_GameTraceChannel1
+
 /**
  * 
  */
@@ -44,10 +46,16 @@ protected:
 protected:
 	virtual void BeginPlay() override;
 
+public:
+	void StartFalling();
+
 protected:
 	UFUNCTION(BlueprintCallable)
 	void StartUnlockGame();
 
 	UFUNCTION(BlueprintCallable)
 	void Unlock();
+
+	UFUNCTION()
+	void OnHitSurface(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

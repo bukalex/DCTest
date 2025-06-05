@@ -8,6 +8,7 @@
 
 class UPaperSpriteComponent;
 class UUSBPortComponent;
+class AFlashDrive;
 
 UCLASS()
 class DCTEST_API ALaptop : public AActor
@@ -23,4 +24,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UUSBPortComponent> USBPort;
+
+protected:
+	virtual void BeginPlay() override;
+
+protected:
+	UFUNCTION()
+	void OnDriveDetected(const AFlashDrive* FlashDrive);
+
+	UFUNCTION()
+	void OnDriveLost(const AFlashDrive* FlashDrive);
 };

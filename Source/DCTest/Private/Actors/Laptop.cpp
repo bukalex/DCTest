@@ -3,8 +3,10 @@
 
 #include "Actors/Laptop.h"
 
+#include "Kismet/GameplayStatics.h"
 #include "PaperSpriteComponent.h"
 #include "Components/USBPortComponent.h"
+#include "GameModes/FlashDriveMode.h"
 
 ALaptop::ALaptop()
 {
@@ -15,4 +17,25 @@ ALaptop::ALaptop()
 
 	USBPort = CreateDefaultSubobject<UUSBPortComponent>("USBSprite");
 	USBPort->SetupAttachment(GetRootComponent());
+}
+
+void ALaptop::BeginPlay()
+{
+	Super::BeginPlay();
+
+	USBPort->OnFlashDriveDetected.AddDynamic(this, &ALaptop::OnDriveDetected);
+	USBPort->OnFlashDriveLost.AddDynamic(this, &ALaptop::OnDriveLost);
+}
+
+void ALaptop::OnDriveDetected(const AFlashDrive* FlashDrive)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Green, "Detected");
+}
+
+void ALaptop::OnDriveLost(const AFlashDrive* FlashDrive)
+{
+	if (AFlashDriveMode* FlashDriveMode = Cast<AFlashDriveMode>(UGameplayStatics::GetGameMode(GetWorld())))
+	{
+		FlashDriveMode->bCanCallNextFounder = true;
+	}
 }

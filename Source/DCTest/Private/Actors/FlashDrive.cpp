@@ -19,7 +19,17 @@ void AFlashDrive::BeginPlay()
 	Super::BeginPlay();
 
 	BodySprite->OnSpriteClicked.AddDynamic(this, &AFlashDrive::StartUnlockGame);
+	BodySprite->OnComponentHit.AddDynamic(this, &AFlashDrive::OnHitSurface);
 	BodySprite->SetSprite(bIsLocked ? LockedSprite : UnlockedSprite);
+}
+
+void AFlashDrive::StartFalling()
+{
+	BodySprite->SetEnableGravity(true);
+	BodySprite->SetLinearDamping(0.01f);
+	BodySprite->SetAngularDamping(0);
+	BodySprite->SetCollisionResponseToAllChannels(ECR_Ignore);
+	BodySprite->SetCollisionResponseToChannel(ECC_Ground, ECR_Block);
 }
 
 void AFlashDrive::StartUnlockGame()
@@ -36,4 +46,16 @@ void AFlashDrive::Unlock()
 {
 	bIsLocked = false;
 	BodySprite->SetSprite(UnlockedSprite);
+}
+
+void AFlashDrive::OnHitSurface(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (BodySprite->IsGravityEnabled())
+	{
+		BodySprite->SetEnableGravity(false);
+		BodySprite->SetLinearDamping(10);
+		BodySprite->SetAngularDamping(10);
+		BodySprite->SetCollisionResponseToAllChannels(ECR_Block);
+		BodySprite->SetCollisionResponseToChannel(ECC_Ground, ECR_Ignore);
+	}
 }

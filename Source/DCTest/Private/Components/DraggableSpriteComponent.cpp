@@ -7,6 +7,9 @@ UDraggableSpriteComponent::UDraggableSpriteComponent()
 {
 	SetSimulatePhysics(true);
 	SetEnableGravity(false);
+	SetCollisionProfileName("BlockAllDynamic");
+	SetLinearDamping(10);
+	SetAngularDamping(10);
 
 	BodyInstance.bLockXRotation = true;
 	BodyInstance.bLockYRotation = false;
