@@ -29,7 +29,7 @@ void ALaptop::BeginPlay()
 
 void ALaptop::OnDriveDetected(const AFlashDrive* FlashDrive)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Green, "Detected");
+
 }
 
 void ALaptop::OnDriveLost(const AFlashDrive* FlashDrive)
