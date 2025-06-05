@@ -7,6 +7,8 @@
 
 AFlashDrive::AFlashDrive()
 {
+	PrimaryActorTick.bCanEverTick = false;
+
 	BodySprite = CreateDefaultSubobject<UDraggableSpriteComponent>("BodySprite");
 	SetRootComponent(BodySprite);
 }
